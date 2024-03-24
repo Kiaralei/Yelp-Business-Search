@@ -1,0 +1,392 @@
+<div class="container everything">
+    <div class="container m-auto">
+        <div class="row">
+            <div class="col col-sm-2 col-md-3"></div>
+            <div class="col-12 col-sm-8 col-md-6" >
+                <div class="container search" >
+                    <div class="row ">
+                        <div class="col col-md-12 title">       
+                            Business Search
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col col-md-12">
+                            <form style="width: 90%" ngNativeValidate>
+                                <div class="form-group">
+                                    <label for="keyword">Keyword</label><p class="inputReq">*</p>
+                                    <input matInput type="text" [(ngModel)]="formInfo.keyword" [matAutocomplete]="auto" class="form-control" [formControl]="keywordCtrl" id="keyword" name="keyword" required>
+                                    <mat-autocomplete  #auto="matAutocomplete"  [displayWith]="displayWith">
+                                        <mat-option *ngIf="isLoading" class="is-loading">Loading...</mat-option>
+                                        <ng-container *ngIf="!isLoading">
+                                            <mat-option *ngFor="let text of autoText" [value]="text.title">
+                                                <span>{{text.title}}</span>
+                                            </mat-option>
+                                        </ng-container>
+                                    </mat-autocomplete>
+                                </div>
+                                 
+                                <div class="form-row row">
+                                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
+                                      <label for="distance">Distance</label>
+                                      <input type="text" 
+                                        [(ngModel)]="formInfo.distance" 
+                                        class="form-control" 
+                                        id="distance" 
+                                        name="distance" 
+                                        placeholder="10"
+                                        [formControl]="disCtrl"
+                                        pattern="[0-9]*"
+                                        ng-max="24">
+                                       
+                                    </div>
+                                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-6">
+                                      <label for="category">Category</label><p class="inputReq">*</p>
+                                      <select id="category" [(ngModel)]="formInfo.category" name="category" class="form-select" style="color: black; width:80%" >
+                                        <option *ngFor="let cat of categoryList" [value]="cat.value">{{cat.label}}</option>
+                                        <!-- <option value="all" selected>Default</option>
+                                        <option value="arts">Arts & Entertainment</option>
+                                        <option value="health">Health & Medical</option>
+                                        <option value="hotelstravel">Hotels & Travel</option>
+                                        <option value="food">Food</option>
+                                        <option value="professional">Professional Services</option> -->
+                                      </select>
+                                    </div>
+                                  </div>
+                                
+                                <div class="form-group">
+                                    <label for="location">Loctation</label><p class="inputReq">*</p>
+                                    <input type="text" [formControl]="locCtrl" [(ngModel)]="formInfo.location" class="form-control" id="location" name="location" required>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" [(ngModel)]="formInfo.autoDetect" (change)="autoCheck()" type="checkbox" value="" id="autoDetect" name="autoDetect">
+                                        <label class="form-check-label" for="autoDetect">
+                                        Auto-detect my location
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-row" style="text-align: center; margin-top: 30px; margin-bottom: 20px">
+                        
+                                    <button class="btn btn-danger" (click)="submitForm()" type="submit" id="submit">Submit</button>
+                                    <button class="btn btn-primary" (click)="clearForm()" type="clear" id="clear">Clear</button>
+                                </div>
+                            </form>
+                         
+                              
+                        </div>        
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col col-md-3"></div> -->
+        </div>
+    </div>
+
+    <!--Search Result Table-->
+    <div class="container resultTable  m-auto" *ngIf="hasResult">
+        <div class="row">
+            <!-- <div class="col-md-1 col-lg-1"></div> -->
+            <div class="col">
+                <table class="table table-striped" style="width: 100%;margin-top: 50px" >
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Business Name</th>
+                            <th>Rating</th>
+                            <th>Distance (miles)</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr *ngFor="let data of searchResult; let indexOfelement=index;" (click)="showDetail({data})" style="cursor: pointer">
+                            <td class="col-lg-1 no">{{indexOfelement + 1}}</td>
+                            <td class="col-2 col-lg-2"><img class="img-responsive" src={{data.image_url}}></td>
+                            <td class="col-lg-5">{{data.name}}</td>
+                            <td class="col-lg-2">{{data.rating}}</td>
+                            <td class="col-lg-2">{{data.distance/1609.344 | number : '1.2-2'}}</td>
+                        </tr>
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+        
+    </div>
+
+    <!--No Search Result-->
+    <div *ngIf="noResult" class="container ">
+        <div class="row m-auto">
+            <div class="col-md-3 col-lg-4"></div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="noResult">
+                    No results available
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Detail Table-->
+    <div class="container m-auto" *ngIf="displayDetail" >
+        <div class="row">
+            <div class="col col-sm-2 col-md-2"></div>
+            <div class="col-12 col-sm-8 col-md-8" >
+                <div class="container  detailTable " style="margin-top: 50px;">
+                    <div class="row" style="margin-top : 10px">
+                        <div class="col-2 col-lg-1">
+                            <a (click)="backToList()" style="cursor:pointer">
+                                <svg style="width: 50%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/>
+                                </svg>
+    
+                            </a>
+                        </div>
+                        <!-- <mat-icon class="btn btn-link col">keyboard_backspace</mat-icon> -->
+                       
+                        <!-- <i class="material-icons col" style="text-align: left; cursor:pointer" (click)="backToList()">keyboard_backspace</i> -->
+                        <div class="col-10 col-lg-11"></div>
+                    </div>
+                    <div class="row">
+                            <h1>{{detailInfo.name}}</h1>
+                    </div>
+                    <div class="row">
+                        <mat-tab-group mat-align-tabs="center"  backgroundColor="accent">
+                            <mat-tab label="Business Detail">
+                                <div class="container">
+                                    <div class="container m-auto" style="padding: 0;">
+                                        <div class="row" >
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Address</h2>
+                                                <span >{{detailInfo.location.display_address.join(', ')}}</span>
+                                            </div>
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Category</h2>
+                                                <span>{{detailCat.join(' | ')}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Phone</h2>
+                                                <span>{{detailInfo.display_phone}}</span>
+                                            </div>
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Price Range</h2>
+                                                <span>{{detailInfo.price ? detailInfo.price : 'Unknown' }}</span>  
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Status</h2>
+                                                <span *ngIf="isOpen" style="color: green;">Open Now</span>
+                                                <span *ngIf="!isOpen" style="color: red;">Closed</span>
+                                            </div>
+                                            <div class="col-12 col-md-6 infoBlock">
+                                                <h2>Visit yelp for more</h2>
+                                                <a href={{detailInfo.url}} target="_blank">Business Link</a>  
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                
+                                    
+                                    <!--Reserve Btn-->
+                                    <button *ngIf="!hasReserve" class="btn btn-danger" (click)="open(content)">Reserve Now</button>
+                                    <button *ngIf="hasReserve" class="btn btn-primary" (click)="delete()">Cancel reservation</button>
+                                    
+                                    
+                                
+                                    <!-- <pre>{{ closeResult }}</pre> -->
+
+
+                                    <!--Share Link-->
+                                    <div class="row shareLink">
+                                        <div class="col col-md-12 col-lg-12" style="margin-bottom: 10px;">
+                                            Share On: 
+                                            <a href="https://twitter.com/intent/tweet?text=Check%20{{detailInfo.name}}%20On%20Yelp&url={{detailInfo.url}}" target="_blank">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-twitter" viewBox="0 0 16 16">
+                                                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                                                </svg>
+                                            </a>
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{detailInfo.url}}&quote=" target="_blank" style="line-height: 30px">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="#455894" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                                                    <path d="M400 32H48A48 48 0 0 0 0 80v352a48 48 0 0 0 48 48h137.25V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.27c-30.81 0-40.42 19.12-40.42 38.73V256h68.78l-11 71.69h-57.78V480H400a48 48 0 0 0 48-48V80a48 48 0 0 0-48-48z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-bottom: 20px;">
+                                        <ngb-carousel [showNavigationIndicators]="false">
+                                            <ng-template ngbSlide *ngFor="let img of detailInfo.photos" style="color: black">
+                                                <div class="picsum-img-wrapper">
+                                                    <img src={{img}} alt="" />
+                                                </div>
+                                                <!-- <div class="carousel-caption">
+                                                    <h3>First slide label</h3>
+                                                    <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                                                </div> -->
+                                            </ng-template>
+                                        </ngb-carousel>
+                                    </div>
+
+
+                                    
+                                </div>
+                
+                            
+                            </mat-tab>
+                            <mat-tab label="Map Location">
+                                <div class="my-google-map container">
+                                    <div class="row">
+                                        <google-map *ngIf="showMap"  [options]="mapOptions" style="padding: 0;">
+                                            <map-marker [position]="marker.position" style="width:100%"></map-marker>
+                                        </google-map>
+                                    </div>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Reviews">
+                                <div class="container" style="padding: 0;">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr *ngFor="let rev of reviews" style="text-align: left;">
+                                                <td>
+                                                    <b>{{rev.user.name}}</b>
+                                                    <p>Rating: {{rev.rating}}/5</p>
+                                                    <p>{{rev.text}}</p>
+                                                    <p>{{rev.time_created.substring(0,10)}}</p>
+                                                </td>
+                                            </tr>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </mat-tab>
+                            </mat-tab-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+
+    </div>
+
+</div>
+
+
+
+
+
+<!--Modal-->
+<ng-template #content let-modal>
+<div class="modal-header">
+    <h1 class="modal-title" id="modal-basic-title">Reservation Form</h1>
+</div>                                                                                                      
+<div class="modal-body">
+    <form novalidate #reserveForm="ngForm" (ngSubmit)="reserveForm.submitted && book(reserveForm) && modal.close()">
+        <h2 style="text-align: center;">{{detailInfo.name}}</h2>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input 
+                id="email" 
+                type="text" 
+                [ngClass]="{ 'is-invalid': email.invalid && (reserveForm.submitted || email.dirty ) }" 
+                class="form-control"
+                #email="ngModel" 
+                [(ngModel)]="reserveInfo.email" 
+                name="email"  
+                pattern="[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*"
+                required>
+
+            
+            <div  class="invalid-feedback" *ngIf="email.errors?.['required']">
+                Email is required.
+            </div>
+            <div  class="invalid-feedback" *ngIf="email.errors?.['pattern']">
+                Email must be a valid email address.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <div class="input-group">
+                <input type="date"
+                    class="form-control"
+                    name="date"
+                    [(ngModel)]="reserveInfo.date"
+                    #date="ngModel"
+                    min={{today}}
+                    placeholder="mm/dd/yyyy"
+                    [ngClass]="{ 'is-invalid': date.invalid && (reserveForm.submitted || date.dirty || date.touched) }" 
+                    required
+                >
+                
+                <div class="invalid-feedback">
+                    Date is required.
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="hour" class="form-label">Time</label>
+            <div class="input-group">
+                <div class="col-6 col-md-6 col-lg-6 ">
+
+                    <select type="time" 
+                        class="form-control" 
+                        [(ngModel)]="reserveInfo.hour" 
+                        #hour="ngModel" 
+                        name="hour" 
+                        style="width: 40%;display:inline" 
+                        [ngClass]="{ 'is-invalid': hour.invalid && (reserveForm.submitted || hour.dirty || hour.touched) }" 
+                        required>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                    </select>
+                    <span> : </span>
+                    <select 
+                        type="time" 
+                        class="form-control" 
+                        [(ngModel)]="reserveInfo.min" 
+                        name="min" 
+                        style="width: 40%;display:inline" 
+                        #min="ngModel" 
+                        [ngClass]="{ 'is-invalid': min.invalid && (reserveForm.submitted || min.dirty || min.touched) }" 
+                        required>
+                        <option value="00">00</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                        <option value="45">45</option>
+                    </select>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" style="margin-left: 10px;">
+                        <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+                      </svg>
+                    <!-- <div class="invalid-feedback">
+                        Time is required.
+                    </div> -->
+
+                </div>
+                
+            </div>
+        </div>
+
+        
+
+        <div class="form-row m-auto" style="text-align: center;">
+            <button class="btn btn-danger"  type="submit">Submit</button>
+        </div>
+
+        
+    </form>
+</div>
+<div class="modal-footer">
+    <button id="closeModal" type="button" class="btn btn-dark" (click)="modal.close('Close click') ; clearReserForm()" #closeAddExpenseModal>Close</button>
+</div>
+</ng-template>
+
+

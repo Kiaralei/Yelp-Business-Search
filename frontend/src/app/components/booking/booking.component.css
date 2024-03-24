@@ -1,0 +1,24 @@
+.noBooking{
+    color: #ca3127;
+    background-color: white;
+    text-align: center;
+    line-height: 30px;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 25px;
+    margin-top: 60px;
+}
+
+.bookTable{
+    margin-top: 50px;
+}
+
+.bookTable table{
+    background-color: white;
+    text-align: center;
+}
+
+.no{
+    font-weight: bolder;
+}
+

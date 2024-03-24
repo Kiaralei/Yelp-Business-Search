@@ -1,0 +1,27 @@
+<!--navBar-->
+<div class="col-8 offset-4 col-lg-3 offset-lg-9">
+    <nav>
+        <a routerLink="search" >
+            <button [ngClass]=" isSearch ?  'btn btn-outline-dark' : 'btn btn-outline-*' " id="searchBtn" type="button" (click)="clickSearch()">
+                Search
+            </button>
+        </a>
+        <a routerLink="bookings">
+            <button [ngClass]=" isBooking ?  'btn btn-outline-dark' : 'btn btn-outline-*' " id="myBook" type="button"  (click)="clickBooking()">
+                My Bookings
+            </button>
+        </a>
+    </nav>
+    <!-- <nav *ngIf="!isSearch">
+        <a routerLink="search">
+            <button class="btn btn-outline-*" id="searchBtn" type="button" (click)="changeStyle()">
+                Search
+            </button>
+        </a>
+        <a routerLink="bookings">
+            <button class="btn btn-outline-dark" id="myBook" type="button"  (click)="changeStyle()">
+                My Bookings
+            </button>
+        </a>
+    </nav> -->
+</div>

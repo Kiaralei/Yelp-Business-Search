@@ -1,0 +1,169 @@
+.everything{
+    padding-bottom: 50px;
+}
+.search{
+    border: 1px solid #e3e2e5;
+    border-radius: 15px;
+    margin-top: 50px;
+    background-color: white;
+}
+
+
+
+.title{
+    text-align: center;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+form{
+    margin: auto auto;
+}
+
+label{
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.inputReq{
+    color: #ED9CB4;
+    display: inline;
+}
+
+
+
+.form-group{
+    margin-top: 16px;
+
+}
+
+#submit{
+    width: 100px;
+    height: 50px;
+    margin-right: 26px;
+}
+
+#clear{
+    width: 84px;
+    height: 50px;
+}
+
+
+.resultTable{
+    /* display: none; */
+    /* width: 1226px; */
+    text-align: center;
+    margin: 80px auto auto auto;
+}
+
+
+.resultTable table{
+    background-color: white;
+    border-collapse: collapse;
+    border-radius: 10px;
+    /* width: 100%; */
+}
+
+
+.resultTable th{
+    /* font-size: 16px; */
+    /* height: 42px; */
+    text-align: center;
+    color: black;
+} 
+
+/* .resultTable td{
+    vertical-align: top;
+} */
+
+.resultTable .no{
+    font-weight: bold;
+}
+
+.resultTable img{
+    /* width: 106px;
+    height: 106px; */
+    width: 80%;
+    height: 80%;
+    max-height: 100px; 
+    max-width:100px;
+    aspect-ratio: 1
+
+}
+
+.noResult{
+    /* width: 100%; */
+    /* border-radius: 5px; */
+    background-color: white;
+    color: #ca3127;
+    font-size: large;
+    text-align: center;
+    line-height: 30px;
+    font-size: large;
+    font-weight: bold;
+    border-radius: 25px;
+    margin-top: 20px;
+}
+
+.detailTable{
+    /* margin-top: 50px; */
+    width: 100%;
+    background-color: white;
+    margin-top: 50px;
+    text-align: center;
+    border-radius: 10px ;
+}
+
+.detailTable h1{
+    margin-bottom: 8px;
+}
+
+/* .detailTable h2{
+    margin: 10px 0;
+} */
+
+.infoBlock{
+    margin : 15px 0;
+}
+.detailTable span{
+    font-size: 16px;
+}
+
+
+
+
+
+
+
+
+mat-tab-group{
+    padding: 0;
+}
+
+.detailTable > mat-tab-labels{
+    background-color: #fadd6a !important;
+}
+
+.detailTable > mat-tab-header {
+    background-color: #fadd6a ;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon{
+    filter: invert(1);
+}
+
+.shareLink svg{
+    margin: 0 5px;
+}
+
+
+.picsum-img-wrapper img{
+    width: 300px;
+    height: 300px;
+
+}
+
+

@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+/* @import url(../node_modules/font-awesome/css/font-awesome.css); */
+
+.bg-cover{
+    background: linear-gradient(to top, darkblue, transparent);
+    height: 100%;
+    width: 100%;
+    opacity: 0.4;
+    /* background-attachment: fixed; */
+    position: fixed;
+
+}
+
+.bg{
+    z-index:  -10;
+    background-image: url(city.jpg);
+
+    background-repeat: no-repeat;
+    /* background-attachment: fixed; */
+    height: 100%;
+    width: 100%;
+    /* position: absolute; */
+    /* position: fixed; */
+    background-position-x: -270px;
+    background-position-y: 204px;
+    height: 100vh;
+    opacity: 0.6;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: 'lato' ; }
+
+
+.my-google-map{
+    padding: 0 !important;
+}
+.my-google-map .map-container{
+    
+    width: 100% !important;
+    height: 100%;
+    margin: 0;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon{
+    filter: invert(1);
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
